@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bootstrap 实例 - 一个简单的网页</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/css/all.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .fakeimg {
+            height: 200px;
+            background: #aaa;
+        }
+
+        .navbar {
+            border-radius: 0px
+        }
+    </style>
+    <meta name="referrer" content="no-referrer"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Movie</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">发现</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+            <form method="GET" class="form-inline" role="form">
+                <div class="form-group">
+                    <input type="text" name="movie" class="form-control" placeholder="请输入电影名称">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success">查询</button>
+                </div>
+            </form>
+            <div style="margin-top: 10px; font-size: 13px">
+                热门：
+                {% for movie in hot_movies %}
+                    <a href="/find/?movie={{ movie }}" style="margin-left: 5px">{{ movie }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            {% if query is not none %}
+                {% if movie_items|length == 0 %}
+                    <div style="font-size: 30px"> 搜索{{ query }} </div>
+                    <div> 没有找到关于 “{{ query }}” 的电影，换个搜索词试试吧。</div>
+                {% else %}
+                    <div class="panel panel-default">
+                    <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th style="width: 100px">海报</th>
+                                <th style="min-width: 200px">电影名</th>
+                                <th style="width: 150px">评分</th>
+                                <th style="min-width: 300px">摘要</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in movie_items %}
+                                <tr>
+                                    <td><img src="{{ item.cover_url }}" style="height: 100px"></td>
+                                    <td>{{ item.title }}</td>
+                                    <td style="color: gold">
+                                        {% for i in range((item.rating.star_count//1)|int) %}
+                                            <i class="fa fa-star"></i>
+                                        {% endfor %}
+                                        {% if item.rating.star_count%1 == 0.5 %}
+                                            <i class="fa fa-star-half"></i>
+                                        {% endif %}
+                                        <b style="color: dimgray">
+                                            {{ item.rating.value }}
+                                        </b>
+
+
+                                    </td>
+                                    <td>{{ item.abstract }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {#                    {{ movie_items }}#}
+                    </div>
+                {% endif %}
+            {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
